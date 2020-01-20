@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ScreepsSharp.Core.RoomObjects
 {
-	public interface ITower: IHasStore
+	public interface ITower: IHasStore, IRoomObject
 	{
 		Result Attack(IRoomObject target);
 		Result Repair(IRoomObject target);

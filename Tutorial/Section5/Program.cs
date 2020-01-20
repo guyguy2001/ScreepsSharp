@@ -19,24 +19,15 @@ namespace ScreepsSharp.Tutorial.Section5
 		{
 			if (!(room.controller?.my ?? false)) { return; }
 			Log(room.name);
-			var towers = room.Find(Find.myStructures)
-				.Where(o => (o as IStructure)?.structureType == StructureType.tower)
-				.Cast<ITower>()
+			var towers = room.FindMine<ITower>();
+
+			var damaged = room.FindMine<IStructure>()
+				.Where(o => o.hits < o.hitsMax)
 				.ToArray();
 
+			var hostiles = room.FindHostile<ICreepBase>();
 
-			var damaged = room.Find(Find.myStructures)
-				.Where(o => (o as IStructure)?.hits < (o as IStructure)?.hitsMax)
-				.Cast<IStructure>()
-				.ToArray();
-
-			var hostiles = room.Find(Find.hostileCreeps)
-				.Cast<ICreepBase>()
-				.ToArray();
-
-			var spawns = room.Find(Find.mySpawns)
-				.Cast<ISpawn>()
-				.ToArray();
+			var spawns = room.FindMine<ISpawn>();
 
 			foreach (var tower in towers)
 			{

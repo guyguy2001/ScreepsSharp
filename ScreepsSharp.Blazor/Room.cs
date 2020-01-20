@@ -77,6 +77,41 @@ namespace ScreepsSharp.Blazor
 			return output;
 		}
 
+		private T[] FindAndCast<T>(Find type)
+			where T : IRoomObject
+		{
+			return Find(type).Where(obj => obj is T).Cast<T>().ToArray();
+		}
+
+		//Potentialy, instead of returning it might make more sense to append the results to a list, if we find the options
+		// aren't mutually exclusive
+		public T[] Find<T>()
+			where T : IRoomObject
+		{
+			Type type = typeof(T);
+			if (type.GetInterfaces().Contains(typeof(IStructure)))
+			{
+				return FindAndCast<T>(Core.Find.structures);
+			}
+			if (type.GetInterfaces().Contains(typeof(ICreep)))
+			{
+				return FindAndCast<T>(Core.Find.creeps);
+			}
+			return new T[] { };
+		}
+
+		public T[] FindMine<T>()
+			where T : IRoomObject
+		{
+			return Find<T>().Where(obj => obj.my).ToArray();
+		}
+
+		public T[] FindHostile<T>()
+			where T : IRoomObject
+		{
+			return Find<T>().Where(obj => !obj.my).ToArray();
+		}
+
 		private IRoomObject FromId(string id)
 		{
 			if (!Enum.TryParse(Game.js.InvokeById<string>(id, "structureType"), out StructureType structureType))

@@ -14,6 +14,11 @@ namespace ScreepsSharp.Core
         IMemory memory { get; }
 
         IRoomObject[] Find(Find type);
-        
+
+        T[] Find<T>() where T : IRoomObject;
+
+        T[] FindMine<T>() where T : IRoomObject;
+
+        T[] FindHostile<T>() where T : IRoomObject;
     }
 }
